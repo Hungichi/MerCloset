@@ -177,10 +177,44 @@ const ProductDetail = () => {
             </Typography>
 
             <Box sx={{ mb: 3 }}>
-              <Chip label={product.category} sx={{ mr: 1, mb: 1 }} />
-              <Chip label={product.size} sx={{ mr: 1, mb: 1 }} />
-              <Chip label={product.color} sx={{ mr: 1, mb: 1 }} />
-              <Chip label={product.style} sx={{ mb: 1 }} />
+              {product.styles && product.styles.length > 0 && (
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Phong cách:
+                  </Typography>
+                  {product.styles.map((style, index) => (
+                    <Chip key={index} label={style} sx={{ mr: 1, mb: 1 }} />
+                  ))}
+                </Box>
+              )}
+              {product.categories && product.categories.length > 0 && (
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Kiểu dáng:
+                  </Typography>
+                  {product.categories.map((category, index) => (
+                    <Chip key={index} label={category} sx={{ mr: 1, mb: 1 }} />
+                  ))}
+                </Box>
+              )}
+              {product.sizes && product.sizes.length > 0 && (
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Kích thước:
+                  </Typography>
+                  {product.sizes.map((size, index) => (
+                    <Chip key={index} label={size} sx={{ mr: 1, mb: 1 }} />
+                  ))}
+                </Box>
+              )}
+              {product.color && (
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="subtitle2" gutterBottom>
+                    Màu sắc:
+                  </Typography>
+                  <Chip label={product.color} sx={{ mb: 1 }} />
+                </Box>
+              )}
             </Box>
           </Box>
 

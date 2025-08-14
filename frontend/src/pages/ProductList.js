@@ -26,6 +26,7 @@ const ProductList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
+  const [selectedStyle, setSelectedStyle] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -60,19 +61,38 @@ const ProductList = () => {
 
     // Filter by category
     if (selectedCategory) {
-      filtered = filtered.filter(product => product.category === selectedCategory);
+      filtered = filtered.filter(product => 
+        product.categories && product.categories.includes(selectedCategory)
+      );
     }
 
     // Filter by size
     if (selectedSize) {
-      filtered = filtered.filter(product => product.size === selectedSize);
+      filtered = filtered.filter(product => 
+        product.sizes && product.sizes.includes(selectedSize)
+      );
+    }
+
+    // Filter by style
+    if (selectedStyle) {
+      filtered = filtered.filter(product => 
+        product.styles && product.styles.includes(selectedStyle)
+      );
     }
 
     setFilteredProducts(filtered);
-  }, [products, searchTerm, selectedCategory, selectedSize]);
+  }, [products, searchTerm, selectedCategory, selectedSize, selectedStyle]);
 
-  const categories = [...new Set(products.map(product => product.category))];
-  const sizes = [...new Set(products.map(product => product.size))];
+  // Get unique categories, sizes, and styles from all products
+  const categories = [...new Set(
+    products.flatMap(product => product.categories || [])
+  )];
+  const sizes = [...new Set(
+    products.flatMap(product => product.sizes || [])
+  )];
+  const styles = [...new Set(
+    products.flatMap(product => product.styles || [])
+  )];
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -134,12 +154,12 @@ const ProductList = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={2}>
             <FormControl fullWidth>
-              <InputLabel>Danh mục</InputLabel>
+              <InputLabel>Kiểu dáng</InputLabel>
               <Select
                 value={selectedCategory}
-                label="Danh mục"
+                label="Kiểu dáng"
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
                 <MenuItem value="">Tất cả</MenuItem>
@@ -151,7 +171,7 @@ const ProductList = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={2}>
             <FormControl fullWidth>
               <InputLabel>Kích thước</InputLabel>
               <Select
@@ -169,12 +189,30 @@ const ProductList = () => {
             </FormControl>
           </Grid>
           <Grid item xs={12} md={2}>
+            <FormControl fullWidth>
+              <InputLabel>Phong cách</InputLabel>
+              <Select
+                value={selectedStyle}
+                label="Phong cách"
+                onChange={(e) => setSelectedStyle(e.target.value)}
+              >
+                <MenuItem value="">Tất cả</MenuItem>
+                {styles.map((style) => (
+                  <MenuItem key={style} value={style}>
+                    {style}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={2}>
             <Button
               variant="outlined"
               onClick={() => {
                 setSearchTerm('');
                 setSelectedCategory('');
                 setSelectedSize('');
+                setSelectedStyle('');
               }}
               startIcon={<FilterList />}
               fullWidth
@@ -211,9 +249,30 @@ const ProductList = () => {
                   {product.description}
                 </Typography>
                 <Box sx={{ mb: 2 }}>
-                  <Chip label={product.category} size="small" sx={{ mr: 1, mb: 1 }} />
-                  <Chip label={product.size} size="small" sx={{ mr: 1, mb: 1 }} />
-                  <Chip label={product.color} size="small" sx={{ mb: 1 }} />
+                  {product.styles && product.styles.length > 0 && (
+                    <Box sx={{ mb: 1 }}>
+                      {product.styles.map((style, index) => (
+                        <Chip key={index} label={style} size="small" sx={{ mr: 0.5, mb: 0.5 }} />
+                      ))}
+                    </Box>
+                  )}
+                  {product.categories && product.categories.length > 0 && (
+                    <Box sx={{ mb: 1 }}>
+                      {product.categories.map((category, index) => (
+                        <Chip key={index} label={category} size="small" sx={{ mr: 0.5, mb: 0.5 }} />
+                      ))}
+                    </Box>
+                  )}
+                  {product.sizes && product.sizes.length > 0 && (
+                    <Box sx={{ mb: 1 }}>
+                      {product.sizes.map((size, index) => (
+                        <Chip key={index} label={size} size="small" sx={{ mr: 0.5, mb: 0.5 }} />
+                      ))}
+                    </Box>
+                  )}
+                  {product.color && (
+                    <Chip label={product.color} size="small" sx={{ mb: 0.5 }} />
+                  )}
                 </Box>
                 <Typography variant="h6" color="primary" gutterBottom>
                   {product.price.toLocaleString('vi-VN')} VNĐ

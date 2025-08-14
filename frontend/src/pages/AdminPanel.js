@@ -29,6 +29,11 @@ import {
   IconButton,
   Tooltip,
   LinearProgress,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  OutlinedInput,
+  ListItemText,
 } from '@mui/material';
 import {
   Add,
@@ -51,15 +56,20 @@ const AdminPanel = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [uploading, setUploading] = useState(false);
+  // Predefined options
+  const styleOptions = ['Đi tiệc', 'Thanh lịch', 'Sexy', 'Cá tính', 'Nhẹ nhàng'];
+  const categoryOptions = ['Váy ngắn', 'Body', 'Trễ vai', 'Áo dài', 'Đầm'];
+  const sizeOptions = ['XS', 'S', 'M', 'L', 'XL'];
+
   const [formData, setFormData] = useState({
     name: '',
     price: '',
     description: '',
-    style: '',
-    category: '',
+    styles: [],
+    categories: [],
     image: '',
     images: [],
-    size: '',
+    sizes: [],
     color: '',
     status: 'available',
   });
@@ -107,11 +117,11 @@ const AdminPanel = () => {
         name: product.name,
         price: product.price.toString(),
         description: product.description,
-        style: product.style,
-        category: product.category,
+        styles: product.styles || [],
+        categories: product.categories || [],
         image: product.image,
         images: product.images || [],
-        size: product.size,
+        sizes: product.sizes || [],
         color: product.color,
         status: product.status,
       });
@@ -121,11 +131,11 @@ const AdminPanel = () => {
         name: '',
         price: '',
         description: '',
-        style: '',
-        category: '',
+        styles: [],
+        categories: [],
         image: '',
         images: [],
-        size: '',
+        sizes: [],
         color: '',
         status: 'available',
       });
@@ -144,6 +154,8 @@ const AdminPanel = () => {
       [field]: value
     }));
   };
+
+
 
   const handleImageUpload = async (event, isMainImage = true) => {
     const files = event.target.files;
@@ -308,7 +320,9 @@ const AdminPanel = () => {
               <TableCell>Hình ảnh</TableCell>
               <TableCell>Tên sản phẩm</TableCell>
               <TableCell>Giá</TableCell>
-              <TableCell>Danh mục</TableCell>
+              <TableCell>Phong cách</TableCell>
+              <TableCell>Kiểu dáng</TableCell>
+              <TableCell>Kích thước</TableCell>
               <TableCell>Trạng thái</TableCell>
               <TableCell>Thao tác</TableCell>
             </TableRow>
@@ -330,7 +344,45 @@ const AdminPanel = () => {
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.price.toLocaleString('vi-VN')} VNĐ</TableCell>
-                <TableCell>{product.category}</TableCell>
+                <TableCell>
+                  {product.styles && product.styles.length > 0 ? (
+                    <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                      {product.styles.map((style, index) => (
+                        <Chip key={index} label={style} size="small" variant="outlined" />
+                      ))}
+                    </Box>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      Chưa có
+                    </Typography>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {product.categories && product.categories.length > 0 ? (
+                    <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                      {product.categories.map((category, index) => (
+                        <Chip key={index} label={category} size="small" variant="outlined" />
+                      ))}
+                    </Box>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      Chưa có
+                    </Typography>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {product.sizes && product.sizes.length > 0 ? (
+                    <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                      {product.sizes.map((size, index) => (
+                        <Chip key={index} label={size} size="small" variant="outlined" />
+                      ))}
+                    </Box>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      Chưa có
+                    </Typography>
+                  )}
+                </TableCell>
                 <TableCell>
                   <Chip
                     label={getStatusText(product.status)}
@@ -417,31 +469,100 @@ const AdminPanel = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Phong cách"
-                value={formData.style}
-                onChange={(e) => handleInputChange('style', e.target.value)}
-                margin="normal"
-              />
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Phong cách</InputLabel>
+                <Select
+                  multiple
+                  value={formData.styles}
+                  onChange={(e) => handleInputChange('styles', e.target.value)}
+                  input={<OutlinedInput label="Phong cách" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, minHeight: '24px' }}>
+                      {selected.length > 0 ? (
+                        selected.map((value) => (
+                          <Chip key={value} label={value} size="small" />
+                        ))
+                      ) : (
+                        <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                          Chọn phong cách...
+                        </Typography>
+                      )}
+                    </Box>
+                  )}
+                  sx={{ minWidth: '200px', maxWidth: '200px' }}
+                >
+                  {styleOptions.map((style) => (
+                    <MenuItem key={style} value={style}>
+                      <Checkbox checked={formData.styles.indexOf(style) > -1} />
+                      <ListItemText primary={style} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Danh mục"
-                value={formData.category}
-                onChange={(e) => handleInputChange('category', e.target.value)}
-                margin="normal"
-              />
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Kiểu dáng</InputLabel>
+                <Select
+                  multiple
+                  value={formData.categories}
+                  onChange={(e) => handleInputChange('categories', e.target.value)}
+                  input={<OutlinedInput label="Kiểu dáng" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, minHeight: '24px' }}>
+                      {selected.length > 0 ? (
+                        selected.map((value) => (
+                          <Chip key={value} label={value} size="small" />
+                        ))
+                      ) : (
+                        <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                          Chọn kiểu dáng...
+                        </Typography>
+                      )}
+                    </Box>
+                  )}
+                  sx={{ minWidth: '200px' }}
+                >
+                  {categoryOptions.map((category) => (
+                    <MenuItem key={category} value={category}>
+                      <Checkbox checked={formData.categories.indexOf(category) > -1} />
+                      <ListItemText primary={category} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Kích thước"
-                value={formData.size}
-                onChange={(e) => handleInputChange('size', e.target.value)}
-                margin="normal"
-              />
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Kích thước</InputLabel>
+                <Select
+                  multiple
+                  value={formData.sizes}
+                  onChange={(e) => handleInputChange('sizes', e.target.value)}
+                  input={<OutlinedInput label="Kích thước" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, minHeight: '24px' }}>
+                      {selected.length > 0 ? (
+                        selected.map((value) => (
+                          <Chip key={value} label={value} size="small" />
+                        ))
+                      ) : (
+                        <Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
+                          Chọn kích thước...
+                        </Typography>
+                      )}
+                    </Box>
+                  )}
+                  sx={{ minWidth: '200px' }}
+                >
+                  {sizeOptions.map((size) => (
+                    <MenuItem key={size} value={size}>
+                      <Checkbox checked={formData.sizes.indexOf(size) > -1} />
+                      <ListItemText primary={size} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField

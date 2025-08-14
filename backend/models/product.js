@@ -37,13 +37,13 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    style:{
-        type: String,
-        required: true,
+    styles: {
+        type: [String],
+        default: [],
     },
-    category: {
-        type: String,
-        required: true,
+    categories: {
+        type: [String],
+        default: [],
     },
     image: {
         type: String,
@@ -53,9 +53,9 @@ const productSchema = new mongoose.Schema({
         type: [String],
         default: [],
     },
-    size: {
-        type: String,
-        required: true,
+    sizes: {
+        type: [String],
+        default: [],
     },
     color: {
         type: String,
