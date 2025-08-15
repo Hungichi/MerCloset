@@ -63,6 +63,7 @@ const AdminPanel = () => {
 
   const [formData, setFormData] = useState({
     name: '',
+    brand: '',
     price: '',
     description: '',
     styles: [],
@@ -115,6 +116,7 @@ const AdminPanel = () => {
       setEditingProduct(product);
       setFormData({
         name: product.name,
+        brand: product.brand,
         price: product.price.toString(),
         description: product.description,
         styles: product.styles || [],
@@ -129,6 +131,7 @@ const AdminPanel = () => {
       setEditingProduct(null);
       setFormData({
         name: '',
+        brand: '',
         price: '',
         description: '',
         styles: [],
@@ -319,6 +322,7 @@ const AdminPanel = () => {
             <TableRow>
               <TableCell>Hình ảnh</TableCell>
               <TableCell>Tên sản phẩm</TableCell>
+              <TableCell>Thương hiệu</TableCell>
               <TableCell>Giá</TableCell>
               <TableCell>Phong cách</TableCell>
               <TableCell>Kiểu dáng</TableCell>
@@ -331,18 +335,51 @@ const AdminPanel = () => {
             {products.map((product) => (
               <TableRow key={product._id}>
                 <TableCell>
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    style={{
-                      width: '50px',
-                      height: '50px',
-                      objectFit: 'cover',
-                      borderRadius: '4px'
+                  <Box
+                    sx={{
+                      width: '60px',
+                      height: '60px',
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      backgroundColor: '#f8f9fa',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
-                  />
+                  >
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center top',
+                      }}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    {/* Fallback icon */}
+                    <Box
+                      sx={{
+                        display: 'none',
+                        width: '100%',
+                        height: '100%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: '#f8f9fa',
+                        color: '#6c757d',
+                        fontSize: '1.5rem',
+                      }}
+                    >
+                      🖼️
+                    </Box>
+                  </Box>
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
+                <TableCell>{product.brand || 'Chưa có'}</TableCell>
                 <TableCell>{product.price.toLocaleString('vi-VN')} VNĐ</TableCell>
                 <TableCell>
                   {product.styles && product.styles.length > 0 ? (
@@ -444,6 +481,15 @@ const AdminPanel = () => {
                 label="Tên sản phẩm"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Thương hiệu"
+                value={formData.brand}
+                onChange={(e) => handleInputChange('brand', e.target.value)}
                 margin="normal"
               />
             </Grid>
@@ -618,16 +664,49 @@ const AdminPanel = () => {
                 </label>
                 {formData.image && (
                   <Box sx={{ mt: 1 }}>
-                    <img
-                      src={formData.image}
-                      alt="Main"
-                      style={{
-                        width: '100px',
-                        height: '100px',
-                        objectFit: 'cover',
-                        borderRadius: '4px'
+                    <Box
+                      sx={{
+                        width: '120px',
+                        height: '120px',
+                        borderRadius: '8px',
+                        overflow: 'hidden',
+                        backgroundColor: '#f8f9fa',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        border: '2px solid #e9ecef',
                       }}
-                    />
+                    >
+                      <img
+                        src={formData.image}
+                        alt="Main"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center top',
+                        }}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                      {/* Fallback icon */}
+                      <Box
+                        sx={{
+                          display: 'none',
+                          width: '100%',
+                          height: '100%',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          backgroundColor: '#f8f9fa',
+                          color: '#6c757d',
+                          fontSize: '2rem',
+                        }}
+                      >
+                        🖼️
+                      </Box>
+                    </Box>
                   </Box>
                 )}
               </Box>
@@ -659,16 +738,49 @@ const AdminPanel = () => {
                   <Box sx={{ mt: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                     {formData.images.map((image, index) => (
                       <Box key={index} sx={{ position: 'relative' }}>
-                        <img
-                          src={image}
-                          alt={`Additional ${index + 1}`}
-                          style={{
-                            width: '80px',
-                            height: '80px',
-                            objectFit: 'cover',
-                            borderRadius: '4px'
+                        <Box
+                          sx={{
+                            width: '100px',
+                            height: '100px',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                            backgroundColor: '#f8f9fa',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            border: '2px solid #e9ecef',
                           }}
-                        />
+                        >
+                          <img
+                            src={image}
+                            alt={`Additional ${index + 1}`}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              objectPosition: 'center top',
+                            }}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                              e.target.nextSibling.style.display = 'flex';
+                            }}
+                          />
+                          {/* Fallback icon */}
+                          <Box
+                            sx={{
+                              display: 'none',
+                              width: '100%',
+                              height: '100%',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: '#f8f9fa',
+                              color: '#6c757d',
+                              fontSize: '1.5rem',
+                            }}
+                          >
+                            🖼️
+                          </Box>
+                        </Box>
                         <IconButton
                           size="small"
                           sx={{

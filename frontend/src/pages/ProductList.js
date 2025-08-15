@@ -4,9 +4,6 @@ import {
   Container,
   Typography,
   Grid,
-  Card,
-  CardContent,
-  CardMedia,
   Button,
   TextField,
   FormControl,
@@ -18,6 +15,7 @@ import {
   Alert,
 } from '@mui/material';
 import { Search, FilterList } from '@mui/icons-material';
+import ProductCard from '../components/ProductCard';
 import axios from 'axios';
 
 const ProductList = () => {
@@ -141,8 +139,8 @@ const ProductList = () => {
       )}
 
       {/* Filters */}
-      <Box sx={{ mb: 4, p: 2, bgcolor: 'grey.100', borderRadius: 1 }}>
-        <Grid container spacing={2} alignItems="center">
+      <Box sx={{ mb: 5, p: 3, bgcolor: 'grey.50', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+        <Grid container spacing={3} alignItems="center">
           <Grid item xs={12} md={4}>
             <TextField
               fullWidth
@@ -151,6 +149,11 @@ const ProductList = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               InputProps={{
                 startAdornment: <Search sx={{ mr: 1, color: 'text.secondary' }} />,
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: 2,
+                }
               }}
             />
           </Grid>
@@ -161,6 +164,9 @@ const ProductList = () => {
                 value={selectedCategory}
                 label="Kiểu dáng"
                 onChange={(e) => setSelectedCategory(e.target.value)}
+                sx={{
+                  borderRadius: 2,
+                }}
               >
                 <MenuItem value="">Tất cả</MenuItem>
                 {categories.map((category) => (
@@ -178,6 +184,9 @@ const ProductList = () => {
                 value={selectedSize}
                 label="Kích thước"
                 onChange={(e) => setSelectedSize(e.target.value)}
+                sx={{
+                  borderRadius: 2,
+                }}
               >
                 <MenuItem value="">Tất cả</MenuItem>
                 {sizes.map((size) => (
@@ -195,6 +204,9 @@ const ProductList = () => {
                 value={selectedStyle}
                 label="Phong cách"
                 onChange={(e) => setSelectedStyle(e.target.value)}
+                sx={{
+                  borderRadius: 2,
+                }}
               >
                 <MenuItem value="">Tất cả</MenuItem>
                 {styles.map((style) => (
@@ -216,6 +228,11 @@ const ProductList = () => {
               }}
               startIcon={<FilterList />}
               fullWidth
+              sx={{
+                borderRadius: 2,
+                textTransform: 'none',
+                py: 1.5,
+              }}
             >
               Xóa bộ lọc
             </Button>
@@ -224,70 +241,10 @@ const ProductList = () => {
       </Box>
 
       {/* Products Grid */}
-      <Grid container spacing={4}>
+      <Grid container spacing={2} justifyContent="center"> {/* Giảm spacing từ 4 xuống 2 */}
         {filteredProducts.map((product) => (
-          <Grid item key={product._id} xs={12} sm={6} md={4}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <CardMedia
-                component="img"
-                height="250"
-                image={product.image}
-                alt={product.name}
-              />
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
-                  <Typography gutterBottom variant="h6" component="h3">
-                    {product.name}
-                  </Typography>
-                  <Chip
-                    label={getStatusText(product.status)}
-                    color={getStatusColor(product.status)}
-                    size="small"
-                  />
-                </Box>
-                <Typography variant="body2" color="text.secondary" paragraph>
-                  {product.description}
-                </Typography>
-                <Box sx={{ mb: 2 }}>
-                  {product.styles && product.styles.length > 0 && (
-                    <Box sx={{ mb: 1 }}>
-                      {product.styles.map((style, index) => (
-                        <Chip key={index} label={style} size="small" sx={{ mr: 0.5, mb: 0.5 }} />
-                      ))}
-                    </Box>
-                  )}
-                  {product.categories && product.categories.length > 0 && (
-                    <Box sx={{ mb: 1 }}>
-                      {product.categories.map((category, index) => (
-                        <Chip key={index} label={category} size="small" sx={{ mr: 0.5, mb: 0.5 }} />
-                      ))}
-                    </Box>
-                  )}
-                  {product.sizes && product.sizes.length > 0 && (
-                    <Box sx={{ mb: 1 }}>
-                      {product.sizes.map((size, index) => (
-                        <Chip key={index} label={size} size="small" sx={{ mr: 0.5, mb: 0.5 }} />
-                      ))}
-                    </Box>
-                  )}
-                  {product.color && (
-                    <Chip label={product.color} size="small" sx={{ mb: 0.5 }} />
-                  )}
-                </Box>
-                <Typography variant="h6" color="primary" gutterBottom>
-                  {product.price.toLocaleString('vi-VN')} VNĐ
-                </Typography>
-                <Button
-                  variant="contained"
-                  component={RouterLink}
-                  to={`/product/${product._id}`}
-                  fullWidth
-                  disabled={product.status !== 'available'}
-                >
-                  {product.status === 'available' ? 'Xem chi tiết' : 'Không khả dụng'}
-                </Button>
-              </CardContent>
-            </Card>
+          <Grid item key={product._id} xs={12} sm={6} md={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+            <ProductCard product={product} />
           </Grid>
         ))}
       </Grid>

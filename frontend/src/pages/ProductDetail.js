@@ -126,28 +126,98 @@ const ProductDetail = () => {
         {/* Product Images */}
         <Grid item xs={12} md={6}>
           <Box sx={{ mb: 2 }}>
-            <img
-              src={product.image}
-              alt={product.name}
-              style={{
+            <Box
+              sx={{
                 width: '100%',
-                height: '400px',
-                objectFit: 'cover',
-                borderRadius: '8px'
+                height: '500px',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                backgroundColor: '#f8f9fa',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
               }}
-            />
+            >
+              <img
+                src={product.image}
+                alt={product.name}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center top',
+                }}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+              {/* Fallback icon */}
+              <Box
+                sx={{
+                  display: 'none',
+                  width: '100%',
+                  height: '100%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#f8f9fa',
+                  color: '#6c757d',
+                  fontSize: '4rem',
+                }}
+              >
+                🖼️
+              </Box>
+            </Box>
           </Box>
           
           {product.images && product.images.length > 0 && (
             <ImageList sx={{ width: '100%', height: 200 }} cols={3} rowHeight={164}>
               {product.images.map((image, index) => (
                 <ImageListItem key={index}>
-                  <img
-                    src={image}
-                    alt={`${product.name} ${index + 1}`}
-                    loading="lazy"
-                    style={{ borderRadius: '4px' }}
-                  />
+                  <Box
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      backgroundColor: '#f8f9fa',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img
+                      src={image}
+                      alt={`${product.name} ${index + 1}`}
+                      loading="lazy"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center top',
+                      }}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                    {/* Fallback icon */}
+                    <Box
+                      sx={{
+                        display: 'none',
+                        width: '100%',
+                        height: '100%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: '#f8f9fa',
+                        color: '#6c757d',
+                        fontSize: '2rem',
+                      }}
+                    >
+                      🖼️
+                    </Box>
+                  </Box>
                 </ImageListItem>
               ))}
             </ImageList>
@@ -167,6 +237,12 @@ const ProductDetail = () => {
                 size="large"
               />
             </Box>
+            
+            {product.brand && (
+              <Typography variant="h6" color="text.secondary" gutterBottom sx={{ mb: 2 }}>
+                Thương hiệu: {product.brand}
+              </Typography>
+            )}
             
             <Typography variant="h5" color="primary" gutterBottom>
               {product.price.toLocaleString('vi-VN')} VNĐ

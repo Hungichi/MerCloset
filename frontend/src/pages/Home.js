@@ -5,13 +5,11 @@ import {
   Typography,
   Box,
   Grid,
-  Card,
-  CardContent,
-  CardMedia,
   Button,
   Paper,
 } from '@mui/material';
 import { ShoppingBag, Phone, Email } from '@mui/icons-material';
+import ProductCard from '../components/ProductCard';
 import axios from 'axios';
 
 const Home = () => {
@@ -21,7 +19,7 @@ const Home = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/products');
-        setFeaturedProducts(response.data.slice(0, 6)); // Lấy 6 sản phẩm đầu tiên
+        setFeaturedProducts(response.data.slice(0, 8)); // Lấy 8 sản phẩm để hiển thị 2 hàng x 4 cột
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -96,42 +94,36 @@ const Home = () => {
 
       {/* Featured Products */}
       <Container maxWidth="lg" sx={{ mb: 8 }}>
-        <Typography variant="h4" component="h2" gutterBottom align="center">
+        <Typography variant="h4" component="h2" gutterBottom align="center" sx={{ mb: 5 }}>
           Sản phẩm nổi bật
         </Typography>
-        <Grid container spacing={4}>
+        <Grid container spacing={2} justifyContent="center"> {/* Giảm spacing từ 4 xuống 2 */}
           {featuredProducts.map((product) => (
-            <Grid item key={product._id} xs={12} sm={6} md={4}>
-              <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={product.image}
-                  alt={product.name}
-                />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h6" component="h3">
-                    {product.name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" paragraph>
-                    {product.description}
-                  </Typography>
-                  <Typography variant="h6" color="primary">
-                    {product.price.toLocaleString('vi-VN')} VNĐ
-                  </Typography>
-                  <Button
-                    size="small"
-                    component={RouterLink}
-                    to={`/product/${product._id}`}
-                    sx={{ mt: 1 }}
-                  >
-                    Xem chi tiết
-                  </Button>
-                </CardContent>
-              </Card>
+            <Grid item key={product._id} xs={12} sm={6} md={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <ProductCard product={product} />
             </Grid>
           ))}
         </Grid>
+        
+        {/* View All Products Button */}
+        <Box sx={{ textAlign: 'center', mt: 5 }}>
+          <Button
+            variant="outlined"
+            size="large"
+            component={RouterLink}
+            to="/products"
+            startIcon={<ShoppingBag />}
+            sx={{
+              px: 4,
+              py: 1.5,
+              borderRadius: 2,
+              textTransform: 'none',
+              fontSize: '1rem',
+            }}
+          >
+            Xem tất cả sản phẩm
+          </Button>
+        </Box>
       </Container>
 
       {/* Contact Section */}
