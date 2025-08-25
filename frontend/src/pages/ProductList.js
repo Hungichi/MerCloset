@@ -241,7 +241,7 @@ const ProductList = () => {
       </Box>
 
       {/* Products Grid */}
-      <Grid container spacing={2} justifyContent="center"> {/* Giảm spacing từ 4 xuống 2 */}
+      <Grid container spacing={2} justifyContent="flex-start"> {/* Thay đổi từ center thành flex-start */}
         {filteredProducts.map((product) => (
           <Grid item key={product._id} xs={12} sm={6} md={3} sx={{ display: 'flex', justifyContent: 'center' }}>
             <ProductCard product={product} />

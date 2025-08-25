@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Container,
@@ -35,6 +35,12 @@ const ProductDetail = () => {
   const [endDate, setEndDate] = useState('');
   const [availabilityResult, setAvailabilityResult] = useState(null);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+  const thumbContainerRef = useRef(null);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     fetchProduct();
@@ -52,6 +58,14 @@ const ProductDetail = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (product) {
+      // Initialize selected image to main image or first additional image
+      const initial = product.image || (product.images && product.images[0]) || '';
+      setSelectedImage(initial);
+    }
+  }, [product]);
 
   const checkAvailability = async () => {
     if (!startDate || !endDate) {
@@ -140,88 +154,103 @@ const ProductDetail = () => {
               }}
             >
               <img
-                src={product.image}
+                src={selectedImage}
                 alt={product.name}
                 style={{
                   width: '100%',
                   height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center top',
-                }}
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'flex';
+                  objectFit: 'contain',
+                  objectPosition: 'center',
                 }}
               />
-              {/* Fallback icon */}
-              <Box
-                sx={{
-                  display: 'none',
-                  width: '100%',
-                  height: '100%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: '#f8f9fa',
-                  color: '#6c757d',
-                  fontSize: '4rem',
-                }}
-              >
-                🖼️
-              </Box>
             </Box>
           </Box>
           
-          {product.images && product.images.length > 0 && (
-            <ImageList sx={{ width: '100%', height: 200 }} cols={3} rowHeight={164}>
-              {product.images.map((image, index) => (
-                <ImageListItem key={index}>
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      borderRadius: '8px',
-                      overflow: 'hidden',
-                      backgroundColor: '#f8f9fa',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <img
-                      src={image}
-                      alt={`${product.name} ${index + 1}`}
-                      loading="lazy"
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center top',
-                      }}
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                    {/* Fallback icon */}
-                    <Box
-                      sx={{
-                        display: 'none',
-                        width: '100%',
-                        height: '100%',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: '#f8f9fa',
-                        color: '#6c757d',
-                        fontSize: '2rem',
-                      }}
-                    >
-                      🖼️
-                    </Box>
-                  </Box>
-                </ImageListItem>
-              ))}
-            </ImageList>
-          )}
+          {/* Thumbnails - horizontal scroll */}
+          <Box
+            sx={{
+              mt: 2,
+              display: 'flex',
+              gap: 1.5,
+              overflowX: 'auto',
+              py: 1,
+              px: 0.5,
+              cursor: isDragging ? 'grabbing' : 'grab',
+              userSelect: 'none',
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(0,0,0,0.25) transparent',
+              '&::-webkit-scrollbar': {
+                height: 6,
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: 'rgba(0,0,0,0.25)',
+                borderRadius: '8px',
+              },
+              '&::-webkit-scrollbar-track': {
+                backgroundColor: 'transparent',
+              },
+            }}
+            ref={thumbContainerRef}
+            onMouseDown={(e) => {
+              const container = thumbContainerRef.current;
+              if (!container) return;
+              isDraggingRef.current = true;
+              setIsDragging(true);
+              startXRef.current = e.pageX - container.offsetLeft;
+              scrollLeftRef.current = container.scrollLeft;
+            }}
+            onMouseLeave={() => {
+              isDraggingRef.current = false;
+              setIsDragging(false);
+            }}
+            onMouseUp={() => {
+              isDraggingRef.current = false;
+              setIsDragging(false);
+            }}
+            onMouseMove={(e) => {
+              if (!isDraggingRef.current) return;
+              e.preventDefault();
+              const container = thumbContainerRef.current;
+              if (!container) return;
+              const x = e.pageX - container.offsetLeft;
+              const walk = x - startXRef.current;
+              container.scrollLeft = scrollLeftRef.current - walk;
+            }}
+          >
+            {([product.image, ...(product.images || [])]
+              .filter(Boolean)
+              .filter((img, idx, arr) => arr.indexOf(img) === idx)
+            ).map((thumb, index) => (
+              <Box
+                key={`${thumb}-${index}`}
+                onClick={() => setSelectedImage(thumb)}
+                sx={{
+                  width: 90,
+                  height: 90,
+                  borderRadius: '8px',
+                  overflow: 'hidden',
+                  flex: '0 0 auto',
+                  position: 'relative',
+                  cursor: 'pointer',
+                  outline: selectedImage === thumb ? '2px solid #1976d2' : '2px solid transparent',
+                  boxShadow: selectedImage === thumb ? '0 0 0 2px rgba(25,118,210,0.2)' : 'none',
+                  backgroundColor: '#f8f9fa',
+                }}
+              >
+                <img
+                  src={thumb}
+                  alt={`${product.name} ${index + 1}`}
+                  loading="lazy"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center top',
+                  }}
+                />
+              </Box>
+            ))}
+          </Box>
         </Grid>
 
         {/* Product Info */}
