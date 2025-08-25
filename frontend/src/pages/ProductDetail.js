@@ -25,6 +25,8 @@ import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -49,7 +51,7 @@ const ProductDetail = () => {
   const fetchProduct = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+      const response = await axios.get(`${API_URL}/products/${id}`);
       setProduct(response.data);
     } catch (error) {
       setError('Không thể tải thông tin sản phẩm');
@@ -100,7 +102,7 @@ const ProductDetail = () => {
 
     try {
       setCheckingAvailability(true);
-      const response = await axios.get(`http://localhost:5000/api/products/${id}/availability`, {
+      const response = await axios.get(`${API_URL}/products/${id}/availability`, {
         params: { startDate, endDate }
       });
       setAvailabilityResult(response.data);

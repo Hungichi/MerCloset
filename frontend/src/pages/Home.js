@@ -12,13 +12,15 @@ import { ShoppingBag, Phone, Email } from '@mui/icons-material';
 import ProductCard from '../components/ProductCard';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/products');
+        const response = await axios.get(`${API_URL}/products`);
         setFeaturedProducts(response.data.slice(0, 8)); // Lấy 8 sản phẩm để hiển thị 2 hàng x 4 cột
       } catch (error) {
         console.error('Error fetching products:', error);

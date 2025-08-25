@@ -18,6 +18,8 @@ import { Search, FilterList } from '@mui/icons-material';
 import ProductCard from '../components/ProductCard';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -35,7 +37,7 @@ const ProductList = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:5000/api/products');
+      const response = await axios.get(`${API_URL}/products`);
       setProducts(response.data);
       setFilteredProducts(response.data);
     } catch (error) {

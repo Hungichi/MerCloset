@@ -228,13 +228,39 @@ router.post('/:id/toggle-day', authMiddleware, async (req, res) => {
         });
 
         if (index >= 0) {
-            // remove the rental covering this day ONLY if it is a single-day marker
+            // If day lies in an existing rental, adjust the range
             const rental = product.rentalDates[index];
-            const isSingleDay = new Date(rental.startDate).toDateString() === new Date(rental.endDate).toDateString();
+            const rentalStart = new Date(rental.startDate);
+            const rentalEnd = new Date(rental.endDate);
+            const isSingleDay = rentalStart.toDateString() === rentalEnd.toDateString();
             if (isSingleDay) {
+                // remove this single-day booking
                 product.rentalDates.splice(index, 1);
             } else {
-                return res.status(409).json({ message: 'Ngày đang nằm trong một khoảng đặt nhiều ngày; không thể toggle.' });
+                // Split or shrink the range to exclude the selected day
+                const dayStart = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+                const dayEnd = new Date(start.getFullYear(), start.getMonth(), start.getDate(), 23, 59, 59, 999);
+                // Case 1: day at start of range
+                if (dayStart.getTime() === new Date(rentalStart.getFullYear(), rentalStart.getMonth(), rentalStart.getDate()).getTime()) {
+                    const newStart = new Date(dayStart);
+                    newStart.setDate(newStart.getDate() + 1);
+                    rental.startDate = newStart;
+                // Case 2: day at end of range
+                } else if (dayEnd.getTime() === new Date(rentalEnd.getFullYear(), rentalEnd.getMonth(), rentalEnd.getDate(), 23, 59, 59, 999).getTime()) {
+                    const newEnd = new Date(dayEnd);
+                    newEnd.setDate(newEnd.getDate() - 1);
+                    rental.endDate = newEnd;
+                // Case 3: day in the middle → split into two ranges
+                } else {
+                    const leftEnd = new Date(dayStart);
+                    leftEnd.setDate(leftEnd.getDate() - 1);
+                    const rightStart = new Date(dayStart);
+                    rightStart.setDate(rightStart.getDate() + 1);
+                    // Adjust current rental to left range
+                    rental.endDate = leftEnd;
+                    // Push new right range
+                    product.rentalDates.push({ startDate: rightStart, endDate: rentalEnd, status: rental.status || 'confirmed' });
+                }
             }
         } else {
             // add new single day booking

@@ -941,13 +941,12 @@ const AdminPanel = () => {
               try {
                 const toggles = Array.from(pendingToggles);
                 // Apply all toggles
-                await Promise.all(
-                  toggles.map(key => {
-                    const [y, m, d] = key.split('-').map(Number);
-                    const iso = new Date(y, m, d).toISOString();
-                    return api.post(`/products/${bookProduct._id}/toggle-day`, { date: iso });
-                  })
-                );
+                for (const key of toggles) {
+                  const [y, m, d] = key.split('-').map(Number);
+                  const iso = new Date(y, m, d).toISOString();
+                  // sequential to avoid conflicts when splitting ranges
+                  await api.post(`/products/${bookProduct._id}/toggle-day`, { date: iso });
+                }
                 setPendingToggles(new Set());
                 // refresh products list and current product
                 const refreshed = await api.get(`/products/${bookProduct._id}`);
