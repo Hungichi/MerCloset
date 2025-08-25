@@ -67,6 +67,28 @@ const ProductDetail = () => {
     }
   }, [product]);
 
+  const formatConflictingDays = (ranges) => {
+    if (!ranges || ranges.length === 0) return '';
+    const monthYearToDays = new Map();
+    ranges.forEach(({ startDate, endDate }) => {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const month = d.getMonth() + 1; // 1-12
+        const year = d.getFullYear();
+        const key = `${month}/${year}`;
+        const day = d.getDate();
+        if (!monthYearToDays.has(key)) monthYearToDays.set(key, new Set());
+        monthYearToDays.get(key).add(day);
+      }
+    });
+    const parts = Array.from(monthYearToDays.entries()).map(([key, daySet]) => {
+      const days = Array.from(daySet).sort((a, b) => a - b).join(',');
+      return `${days}/${key}`;
+    });
+    return parts.join('; ');
+  };
+
   const checkAvailability = async () => {
     if (!startDate || !endDate) {
       setAvailabilityResult({
@@ -378,9 +400,14 @@ const ProductDetail = () => {
               <Typography variant="body1" gutterBottom>
                 {availabilityResult.available 
                   ? 'Sản phẩm có sẵn trong khoảng thời gian này!' 
-                  : availabilityResult.reason
+                  : (availabilityResult.reason || 'Khoảng thời gian này không khả dụng')
                 }
               </Typography>
+              {!availabilityResult.available && availabilityResult.conflictingDates && availabilityResult.conflictingDates.length > 0 && (
+                <Typography variant="body2" color="text.secondary">
+                  Đã được đặt: {formatConflictingDays(availabilityResult.conflictingDates)}
+                </Typography>
+              )}
               {availabilityResult.available && (
                 <Typography variant="body2">
                   Vui lòng liên hệ với chúng tôi để đặt hàng
@@ -406,41 +433,7 @@ const ProductDetail = () => {
         </Grid>
       </Grid>
 
-      {/* Rental History */}
-      {product.rentalDates && product.rentalDates.length > 0 && (
-        <Box sx={{ mt: 6 }}>
-          <Typography variant="h5" gutterBottom>
-            Lịch sử thuê
-          </Typography>
-          <Grid container spacing={2}>
-            {product.rentalDates
-              .filter(rental => rental.status !== 'cancelled')
-              .map((rental, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card>
-                    <CardContent>
-                      <Typography variant="h6" gutterBottom>
-                        {rental.customerName}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" gutterBottom>
-                        {format(new Date(rental.startDate), 'dd/MM/yyyy', { locale: vi })} - {format(new Date(rental.endDate), 'dd/MM/yyyy', { locale: vi })}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {rental.customerPhone}
-                      </Typography>
-                      <Chip 
-                        label={rental.status} 
-                        size="small" 
-                        color={rental.status === 'confirmed' ? 'success' : 'default'}
-                        sx={{ mt: 1 }}
-                      />
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-          </Grid>
-        </Box>
-      )}
+      
     </Container>
   );
 };

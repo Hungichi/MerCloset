@@ -114,6 +114,7 @@ router.get("/:id/availability", async (req, res) => {
 
         res.json({
             available: isAvailable,
+            reason: isAvailable ? undefined : 'Khoảng thời gian này đã có người đặt',
             product: {
                 id: product._id,
                 name: product.name,
@@ -142,21 +143,107 @@ router.post("/:id/rental", authMiddleware, async (req, res) => {
             return res.status(404).json({ message: "Product not found" });
         }
 
+        // Prevent conflicts: reject if overlaps existing non-cancelled rentals
+        const requestedStart = new Date(startDate);
+        const requestedEnd = new Date(endDate);
+        const conflict = product.rentalDates.some(rental => {
+            const rentalStart = new Date(rental.startDate);
+            const rentalEnd = new Date(rental.endDate);
+            return (
+                (requestedStart <= rentalEnd && requestedEnd >= rentalStart) &&
+                rental.status !== 'cancelled'
+            );
+        });
+        if (conflict) {
+            return res.status(409).json({ message: 'Date range conflicts with existing booking' });
+        }
+
         const newRental = {
             startDate,
             endDate,
             customerName,
             customerPhone,
-            status: 'pending'
+            status: 'confirmed'
         };
 
         product.rentalDates.push(newRental);
-        product.status = 'rented';
         product.updatedAt = Date.now();
 
         const updatedProduct = await product.save();
         res.json(updatedProduct);
 
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// POST mark single day as booked (admin) - PROTECTED
+router.post('/:id/book-day', authMiddleware, async (req, res) => {
+    try {
+        const { date } = req.body; // ISO string or yyyy-mm-dd
+        if (!date) return res.status(400).json({ message: 'date is required' });
+
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ message: 'Product not found' });
+
+        const start = new Date(date);
+        const end = new Date(date);
+        end.setHours(23, 59, 59, 999);
+
+        // conflict check
+        const conflict = product.rentalDates.some(rental => {
+            const rentalStart = new Date(rental.startDate);
+            const rentalEnd = new Date(rental.endDate);
+            return (start <= rentalEnd && end >= rentalStart) && rental.status !== 'cancelled';
+        });
+        if (conflict) return res.status(409).json({ message: 'This day is already booked' });
+
+        product.rentalDates.push({ startDate: start, endDate: end, status: 'confirmed' });
+        product.updatedAt = Date.now();
+        const saved = await product.save();
+        res.json(saved);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// POST toggle a single day booking (admin) - PROTECTED
+router.post('/:id/toggle-day', authMiddleware, async (req, res) => {
+    try {
+        const { date } = req.body;
+        if (!date) return res.status(400).json({ message: 'date is required' });
+
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ message: 'Product not found' });
+
+        const start = new Date(date);
+        const end = new Date(date);
+        end.setHours(23, 59, 59, 999);
+
+        // Check if any existing rental covers this day
+        const index = product.rentalDates.findIndex(rental => {
+            const rentalStart = new Date(rental.startDate);
+            const rentalEnd = new Date(rental.endDate);
+            return (start <= rentalEnd && end >= rentalStart) && rental.status !== 'cancelled';
+        });
+
+        if (index >= 0) {
+            // remove the rental covering this day ONLY if it is a single-day marker
+            const rental = product.rentalDates[index];
+            const isSingleDay = new Date(rental.startDate).toDateString() === new Date(rental.endDate).toDateString();
+            if (isSingleDay) {
+                product.rentalDates.splice(index, 1);
+            } else {
+                return res.status(409).json({ message: 'Ngày đang nằm trong một khoảng đặt nhiều ngày; không thể toggle.' });
+            }
+        } else {
+            // add new single day booking
+            product.rentalDates.push({ startDate: start, endDate: end, status: 'confirmed' });
+        }
+
+        product.updatedAt = Date.now();
+        const saved = await product.save();
+        res.json(saved);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

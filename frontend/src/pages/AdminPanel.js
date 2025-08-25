@@ -53,6 +53,14 @@ const AdminPanel = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [bookDialogOpen, setBookDialogOpen] = useState(false);
+  const [bookProduct, setBookProduct] = useState(null);
+  const [bookDate, setBookDate] = useState('');
+  const [monthView, setMonthView] = useState(() => {
+    const d = new Date();
+    return { year: d.getFullYear(), month: d.getMonth() }; // 0-based month
+  });
+  const [pendingToggles, setPendingToggles] = useState(new Set()); // keys: `${year}-${month}-${day}`
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -250,6 +258,35 @@ const AdminPanel = () => {
     }
   };
 
+  const openBookDialog = (product) => {
+    setBookProduct(product);
+    setBookDate('');
+    setPendingToggles(new Set());
+    setBookDialogOpen(true);
+  };
+
+  const closeBookDialog = () => {
+    setBookDialogOpen(false);
+    setBookProduct(null);
+    setBookDate('');
+    setPendingToggles(new Set());
+  };
+
+  const handleBookDay = async () => {
+    if (!bookProduct || !bookDate) return;
+    try {
+      await api.post(`/products/${bookProduct._id}/toggle-day`, { date: bookDate });
+      closeBookDialog();
+      fetchProducts();
+    } catch (err) {
+      if (err.response?.status === 401) {
+        handleLogout();
+      } else {
+        setError(err.response?.data?.message || 'Không thể cập nhật ngày');
+      }
+    }
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'available':
@@ -440,6 +477,15 @@ const AdminPanel = () => {
                         onClick={() => handleOpenDialog(product)}
                       >
                         <Edit />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Đặt ngày">
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => openBookDialog(product)}
+                      >
+                        <CalendarToday />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Xóa">
@@ -814,6 +860,105 @@ const AdminPanel = () => {
           </Button>
           <Button onClick={handleSubmit} variant="contained" startIcon={<Save />}>
             {editingProduct ? 'Cập nhật' : 'Thêm'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Book Day Dialog with calendar */}
+      <Dialog open={bookDialogOpen} onClose={closeBookDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>Đánh dấu lịch cho sản phẩm</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            {bookProduct ? `Sản phẩm: ${bookProduct.name}` : ''}
+          </Typography>
+          {/* Simple calendar grid */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+            <Button size="small" onClick={() => setMonthView(v => ({ year: v.month === 0 ? v.year - 1 : v.year, month: v.month === 0 ? 11 : v.month - 1 }))}>{'<'} Tháng trước</Button>
+            <Typography variant="subtitle1">{`Tháng ${monthView.month + 1}/${monthView.year}`}</Typography>
+            <Button size="small" onClick={() => setMonthView(v => ({ year: v.month === 11 ? v.year + 1 : v.year, month: v.month === 11 ? 0 : v.month + 1 }))}>Tháng sau {'>'}</Button>
+          </Box>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1, mb: 1 }}>
+            {['T2','T3','T4','T5','T6','T7','CN'].map(d => (
+              <Typography key={d} align="center" variant="caption" color="text.secondary">{d}</Typography>
+            ))}
+          </Box>
+          {(() => {
+            const firstDay = new Date(monthView.year, monthView.month, 1);
+            const startWeekday = (firstDay.getDay() + 6) % 7; // Mon=0
+            const daysInMonth = new Date(monthView.year, monthView.month + 1, 0).getDate();
+            const cells = [];
+            for (let i = 0; i < startWeekday; i++) cells.push(null);
+            for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+            const bookedSet = new Set();
+            if (bookProduct && bookProduct.rentalDates) {
+              bookProduct.rentalDates.forEach(r => {
+                const s = new Date(r.startDate);
+                const e = new Date(r.endDate);
+                // mark all days in range
+                for (let dt = new Date(s); dt <= e; dt.setDate(dt.getDate() + 1)) {
+                  bookedSet.add(`${dt.getFullYear()}-${dt.getMonth()}-${dt.getDate()}`);
+                }
+              });
+            }
+            return (
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1 }}>
+                {cells.map((day, idx) => {
+                  if (day === null) return <Box key={`empty-${idx}`} />;
+                  const key = `${monthView.year}-${monthView.month}-${day}`;
+                  const originalBooked = bookedSet.has(key);
+                  const toggled = pendingToggles.has(key);
+                  const isBooked = toggled ? !originalBooked : originalBooked;
+                  return (
+                    <Button
+                      key={key}
+                      type="button"
+                      variant={isBooked ? 'contained' : 'outlined'}
+                      color={isBooked ? 'error' : 'inherit'}
+                      onClick={() => {
+                        setPendingToggles(prev => {
+                          const next = new Set(Array.from(prev));
+                          if (next.has(key)) next.delete(key); else next.add(key);
+                          return next;
+                        });
+                      }}
+                      sx={{ minHeight: 40 }}
+                    >
+                      {day}
+                    </Button>
+                  );
+                })}
+              </Box>
+            );
+          })()}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeBookDialog}>Đóng</Button>
+          <Button
+            variant="contained"
+            disabled={!bookProduct || pendingToggles.size === 0}
+            onClick={async () => {
+              if (!bookProduct) return;
+              try {
+                const toggles = Array.from(pendingToggles);
+                // Apply all toggles
+                await Promise.all(
+                  toggles.map(key => {
+                    const [y, m, d] = key.split('-').map(Number);
+                    const iso = new Date(y, m, d).toISOString();
+                    return api.post(`/products/${bookProduct._id}/toggle-day`, { date: iso });
+                  })
+                );
+                setPendingToggles(new Set());
+                // refresh products list and current product
+                const refreshed = await api.get(`/products/${bookProduct._id}`);
+                setBookProduct(refreshed.data);
+                fetchProducts();
+              } catch (err) {
+                setError(err.response?.data?.message || 'Không thể cập nhật lịch');
+              }
+            }}
+          >
+            Cập nhật lịch
           </Button>
         </DialogActions>
       </Dialog>

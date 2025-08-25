@@ -11,11 +11,11 @@ const rentalDateSchema = new mongoose.Schema({
     },
     customerName: {
         type: String,
-        required: true,
+        required: false,
     },
     customerPhone: {
         type: String,
-        required: true,
+        required: false,
     },
     status: {
         type: String,
