@@ -13,23 +13,23 @@ import { ShoppingBag, AdminPanelSettings } from '@mui/icons-material';
 const Navbar = () => {
   return (
     <AppBar position="static">
-      <Container maxWidth="lg">
-        <Toolbar>
+      <Toolbar disableGutters sx={{ pl: '2%', pr: '2%' }}>
           <Typography
             variant="h6"
             component={RouterLink}
             to="/"
             sx={{
-              flexGrow: 1,
+              flexGrow: 0,
               textDecoration: 'none',
               color: 'inherit',
               fontWeight: 'bold',
+              mr: '4%',
             }}
           >
             MerCloset
           </Typography>
           
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box sx={{ display: 'flex', gap: 2, ml: 'auto' }}>
             <Button
               color="inherit"
               component={RouterLink}
@@ -55,8 +55,7 @@ const Navbar = () => {
               Admin
             </Button>
           </Box>
-        </Toolbar>
-      </Container>
+      </Toolbar>
     </AppBar>
   );
 };
