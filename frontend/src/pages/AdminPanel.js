@@ -908,12 +908,17 @@ const AdminPanel = () => {
                   const originalBooked = bookedSet.has(key);
                   const toggled = pendingToggles.has(key);
                   const isBooked = toggled ? !originalBooked : originalBooked;
+                  const cellDate = new Date(monthView.year, monthView.month, day);
+                  const today = new Date();
+                  today.setHours(0,0,0,0);
+                  const isPast = cellDate < today;
                   return (
                     <Button
                       key={key}
                       type="button"
                       variant={isBooked ? 'contained' : 'outlined'}
-                      color={isBooked ? 'error' : 'inherit'}
+                      color={isPast ? 'inherit' : (isBooked ? 'error' : 'inherit')}
+                      disabled={isPast}
                       onClick={() => {
                         setPendingToggles(prev => {
                           const next = new Set(Array.from(prev));
@@ -921,7 +926,12 @@ const AdminPanel = () => {
                           return next;
                         });
                       }}
-                      sx={{ minHeight: 40 }}
+                      sx={{ 
+                        minHeight: 40,
+                        bgcolor: isPast ? 'grey.200' : undefined,
+                        color: isPast ? 'grey.600' : undefined,
+                        cursor: isPast ? 'not-allowed' : 'pointer'
+                      }}
                     >
                       {day}
                     </Button>
