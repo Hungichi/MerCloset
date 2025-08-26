@@ -121,9 +121,6 @@ const Login = () => {
         </form>
 
         <Box sx={{ textAlign: 'center', mt: 2 }}>
-          <Typography variant="body2" color="text.secondary">
-            Thông tin đăng nhập: admin / FanTrang2304
-          </Typography>
         </Box>
       </Paper>
     </Container>
