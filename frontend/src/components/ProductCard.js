@@ -17,18 +17,32 @@ const ProductCard = ({ product }) => {
       sx={{ 
         height: '100%',
         width: '100%',
-        maxWidth: '260px', // Giảm thêm 20px
-        minWidth: '220px', // Giảm thêm 20px
+        maxWidth: { 
+          xs: '100%',     // Mobile: full width
+          sm: '100%',     // Tablet: full width của grid item
+          md: '260px',    // Desktop: fixed width
+          lg: '280px'     // Large: slightly bigger
+        },
+        minWidth: { 
+          xs: '100%', 
+          sm: '100%', 
+          md: '220px',
+          lg: '240px'
+        },
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: 3,
+        borderRadius: { xs: 2, sm: 2, md: 3 },
         overflow: 'hidden',
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
         transition: 'all 0.3s ease-in-out',
         border: '1px solid #f0f0f0',
         '&:hover': {
-          transform: 'translateY(-2px)',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+          transform: { xs: 'none', sm: 'none', md: 'translateY(-2px)' },
+          boxShadow: { 
+            xs: '0 2px 8px rgba(0,0,0,0.08)', 
+            sm: '0 2px 8px rgba(0,0,0,0.08)', 
+            md: '0 4px 16px rgba(0,0,0,0.12)' 
+          },
           borderColor: '#e0e0e0',
         }
       }}
@@ -41,7 +55,12 @@ const ProductCard = ({ product }) => {
         sx={{
           position: 'relative',
           width: '100%',
-          height: '250px', // Giảm thêm 20px
+          height: { 
+            xs: '180px',  // Mobile: nhỏ hơn
+            sm: '200px',  // Tablet: vừa phải
+            md: '220px',  // Desktop: lớn hơn
+            lg: '240px'   // Large: lớn nhất
+          },
           overflow: 'hidden',
           backgroundColor: '#fafafa',
         }}
@@ -103,11 +122,11 @@ const ProductCard = ({ product }) => {
       {/* Product Info */}
       <CardContent sx={{ 
         flexGrow: 1, 
-        p: 1.5, // Giảm padding từ 2 xuống 1.5
+        p: { xs: 1.2, sm: 1.3, md: 1.5 },
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        minHeight: '110px', // Giảm thêm 10px
+        minHeight: { xs: '90px', sm: '95px', md: '100px' },
         backgroundColor: '#ffffff',
       }}>
         {/* Product Name and Brand */}
@@ -117,7 +136,7 @@ const ProductCard = ({ product }) => {
             component="h3" 
             sx={{
               fontWeight: 600,
-              fontSize: '0.9rem', // Giảm font size
+              fontSize: { xs: '0.85rem', sm: '0.9rem', md: '0.95rem' },
               lineHeight: 1.4,
               color: '#2c3e50',
               mb: 0.5,
@@ -126,7 +145,7 @@ const ProductCard = ({ product }) => {
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
-              minHeight: '2.8em',
+              minHeight: { xs: '2.4em', sm: '2.6em', md: '2.8em' },
             }}
           >
             {product.name}
@@ -161,7 +180,7 @@ const ProductCard = ({ product }) => {
               variant="h6" 
               sx={{
                 fontWeight: 'bold',
-                fontSize: '1rem', // Giảm font size
+                fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem' },
                 color: '#e74c3c',
               }}
             >

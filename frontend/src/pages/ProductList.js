@@ -129,8 +129,17 @@ const ProductList = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
+    <Container maxWidth="lg" sx={{ mt: { xs: 2, md: 4 }, px: { xs: 2, sm: 3 } }}>
+      <Typography 
+        variant="h4" 
+        component="h1" 
+        gutterBottom
+        sx={{ 
+          fontSize: { xs: '1.8rem', sm: '2.2rem', md: '2.5rem' },
+          fontWeight: 'bold',
+          mb: { xs: 2, md: 3 }
+        }}
+      >
         Danh sách sản phẩm
       </Typography>
 
@@ -141,8 +150,14 @@ const ProductList = () => {
       )}
 
       {/* Filters */}
-      <Box sx={{ mb: 5, p: 3, bgcolor: 'grey.50', borderRadius: 2, border: '1px solid #e0e0e0' }}>
-        <Grid container spacing={3} alignItems="center">
+      <Box sx={{ 
+        mb: { xs: 3, md: 5 }, 
+        p: { xs: 2, md: 3 }, 
+        bgcolor: 'grey.50', 
+        borderRadius: 2, 
+        border: '1px solid #e0e0e0' 
+      }}>
+        <Grid container spacing={{ xs: 2, md: 3 }} alignItems="center">
           <Grid item xs={12} md={4}>
             <TextField
               fullWidth
@@ -159,7 +174,7 @@ const ProductList = () => {
               }}
             />
           </Grid>
-          <Grid item xs={12} md={2}>
+          <Grid item xs={6} sm={4} md={2}>
             <FormControl fullWidth>
               <InputLabel>Kiểu dáng</InputLabel>
               <Select
@@ -179,7 +194,7 @@ const ProductList = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={2}>
+          <Grid item xs={6} sm={4} md={2}>
             <FormControl fullWidth>
               <InputLabel>Kích thước</InputLabel>
               <Select
@@ -199,7 +214,7 @@ const ProductList = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={2}>
+          <Grid item xs={6} sm={4} md={2}>
             <FormControl fullWidth>
               <InputLabel>Phong cách</InputLabel>
               <Select
@@ -219,7 +234,7 @@ const ProductList = () => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} md={2}>
+          <Grid item xs={6} sm={4} md={2}>
             <Button
               variant="outlined"
               onClick={() => {
@@ -233,7 +248,8 @@ const ProductList = () => {
               sx={{
                 borderRadius: 2,
                 textTransform: 'none',
-                py: 1.5,
+                py: { xs: 1, md: 1.5 },
+                fontSize: { xs: '0.8rem', md: '0.875rem' }
               }}
             >
               Xóa bộ lọc
@@ -243,9 +259,24 @@ const ProductList = () => {
       </Box>
 
       {/* Products Grid */}
-      <Grid container spacing={2} justifyContent="flex-start"> {/* Thay đổi từ center thành flex-start */}
+      <Grid container spacing={{ xs: 2, sm: 2, md: 2, lg: 2 }} justifyContent="center">
         {filteredProducts.map((product) => (
-          <Grid item key={product._id} xs={12} sm={6} md={3} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Grid 
+            item 
+            key={product._id} 
+            xs={6}      // 2 sản phẩm trên điện thoại nhỏ
+            sm={4}      // 3 sản phẩm trên tablet
+            md={3}      // 4 sản phẩm trên desktop
+            sx={{ 
+              display: 'flex', 
+              justifyContent: 'center',
+              maxWidth: { 
+                xs: '50%',    // 2 sản phẩm
+                sm: '33.33%', // 3 sản phẩm  
+                md: '25%'     // 4 sản phẩm
+              }
+            }}
+          >
             <ProductCard product={product} />
           </Grid>
         ))}
