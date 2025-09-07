@@ -28,7 +28,7 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky" sx={{ top: 0, backgroundColor: 'primary.main', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar sx={{ px: { xs: 2, md: '2%' } }}>
         <Typography
           variant="h6"

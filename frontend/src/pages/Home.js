@@ -36,8 +36,8 @@ const Home = () => {
       <Paper
         sx={{
           position: 'relative',
-          backgroundColor: 'grey.800',
-          color: '#fff',
+          backgroundColor: '#8B7355',
+          color: '#FDFCF8',
           mb: { xs: 2, md: 4 },
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
@@ -53,7 +53,7 @@ const Home = () => {
             bottom: 0,
             right: 0,
             left: 0,
-            backgroundColor: 'rgba(0,0,0,.3)',
+            backgroundColor: 'rgba(93, 78, 55, 0.4)',
           }}
         />
         <Grid container>
@@ -186,7 +186,7 @@ const Home = () => {
       </Container>
 
       {/* Contact Section */}
-      <Paper sx={{ bgcolor: 'grey.100', py: { xs: 4, md: 8 } }}>
+      <Paper sx={{ bgcolor: '#E6D7C3', py: { xs: 4, md: 8 } }}>
         <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
           <Typography 
             variant="h4" 

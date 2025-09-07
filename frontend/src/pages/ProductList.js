@@ -153,9 +153,9 @@ const ProductList = () => {
       <Box sx={{ 
         mb: { xs: 3, md: 5 }, 
         p: { xs: 2, md: 3 }, 
-        bgcolor: 'grey.50', 
+        bgcolor: '#F5F1EB', 
         borderRadius: 2, 
-        border: '1px solid #e0e0e0' 
+        border: '1px solid #E6D7C3' 
       }}>
         <Grid container spacing={{ xs: 2, md: 3 }} alignItems="center">
           <Grid item xs={12} md={4}>

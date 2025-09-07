@@ -33,17 +33,17 @@ const ProductCard = ({ product }) => {
         flexDirection: 'column',
         borderRadius: { xs: 2, sm: 2, md: 3 },
         overflow: 'hidden',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+        boxShadow: '0 2px 12px rgba(93, 78, 55, 0.08)',
         transition: 'all 0.3s ease-in-out',
-        border: '1px solid #f0f0f0',
+        border: '1px solid #E6D7C3',
         '&:hover': {
           transform: { xs: 'none', sm: 'none', md: 'translateY(-2px)' },
           boxShadow: { 
-            xs: '0 2px 8px rgba(0,0,0,0.08)', 
-            sm: '0 2px 8px rgba(0,0,0,0.08)', 
-            md: '0 4px 16px rgba(0,0,0,0.12)' 
+            xs: '0 2px 12px rgba(93, 78, 55, 0.08)', 
+            sm: '0 2px 12px rgba(93, 78, 55, 0.08)', 
+            md: '0 4px 20px rgba(93, 78, 55, 0.15)' 
           },
-          borderColor: '#e0e0e0',
+          borderColor: '#D4C4A8',
         }
       }}
       component={RouterLink}
@@ -62,7 +62,7 @@ const ProductCard = ({ product }) => {
             lg: '240px'   // Large: lớn nhất
           },
           overflow: 'hidden',
-          backgroundColor: '#fafafa',
+          backgroundColor: '#F5F1EB',
         }}
       >
         <img
@@ -88,8 +88,8 @@ const ProductCard = ({ product }) => {
             height: '100%',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#fafafa',
-            color: '#bdbdbd',
+            backgroundColor: '#F5F1EB',
+            color: '#B8A082',
             fontSize: '3rem',
           }}
         >
@@ -127,7 +127,7 @@ const ProductCard = ({ product }) => {
         flexDirection: 'column',
         justifyContent: 'space-between',
         minHeight: { xs: '90px', sm: '95px', md: '100px' },
-        backgroundColor: '#ffffff',
+        backgroundColor: '#FDFCF8',
       }}>
         {/* Product Name and Brand */}
         <Box sx={{ mb: 1.5 }}> {/* Giảm margin bottom */}
@@ -138,7 +138,7 @@ const ProductCard = ({ product }) => {
               fontWeight: 600,
               fontSize: { xs: '0.85rem', sm: '0.9rem', md: '0.95rem' },
               lineHeight: 1.4,
-              color: '#2c3e50',
+              color: '#5D4E37',
               mb: 0.5,
               display: '-webkit-box',
               WebkitLineClamp: 2,
@@ -157,7 +157,7 @@ const ProductCard = ({ product }) => {
               variant="body2" 
               sx={{ 
                 fontSize: '0.75rem', // Giảm font size
-                color: '#7f8c8d',
+                color: '#8B7355',
                 fontWeight: 500,
               }}
             >
@@ -181,7 +181,7 @@ const ProductCard = ({ product }) => {
               sx={{
                 fontWeight: 'bold',
                 fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem' },
-                color: '#e74c3c',
+                color: '#8B7355',
               }}
             >
               {pricePerDay.toLocaleString('vi-VN')} VNĐ/ngày
@@ -192,7 +192,7 @@ const ProductCard = ({ product }) => {
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography 
                   variant="body2" 
-                  sx={{ mr: 1, fontWeight: 500, color: '#7f8c8d', fontSize: '0.8rem' }}
+                  sx={{ mr: 1, fontWeight: 500, color: '#8B7355', fontSize: '0.8rem' }}
                 >
                   Size:
                 </Typography>
@@ -207,8 +207,8 @@ const ProductCard = ({ product }) => {
                         fontSize: '0.65rem',
                         height: '18px',
                         minWidth: '28px',
-                        borderColor: '#bdc3c7',
-                        color: '#34495e',
+                        borderColor: '#D4C4A8',
+                        color: '#5D4E37',
                       }}
                     />
                   ))}
