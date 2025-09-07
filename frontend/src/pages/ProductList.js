@@ -110,7 +110,7 @@ const ProductList = () => {
   const getStatusText = (status) => {
     switch (status) {
       case 'available':
-        return 'Có sẵn';
+        return '';
       case 'rented':
         return 'Đã thuê';
       case 'maintenance':

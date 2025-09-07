@@ -8,7 +8,7 @@ import {
   Button,
   Paper,
 } from '@mui/material';
-import { ShoppingBag, Phone, Email } from '@mui/icons-material';
+import { ShoppingBag, Phone } from '@mui/icons-material';
 import ProductCard from '../components/ProductCard';
 import axios from 'axios';
 
@@ -79,7 +79,7 @@ const Home = () => {
                   fontWeight: 'bold'
                 }}
               >
-                MerCloset
+                Mer Studio
               </Typography>
               <Typography 
                 variant="h5" 
@@ -202,7 +202,7 @@ const Home = () => {
             Liên hệ với chúng tôi
           </Typography>
           <Grid container spacing={{ xs: 3, md: 4 }} justifyContent="center">
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={6}>
               <Box textAlign="center" sx={{ p: { xs: 2, md: 3 } }}>
                 <Phone sx={{ 
                   fontSize: { xs: 35, md: 40 }, 
@@ -226,35 +226,7 @@ const Home = () => {
                     color: 'text.secondary'
                   }}
                 >
-                  0123 456 789
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Box textAlign="center" sx={{ p: { xs: 2, md: 3 } }}>
-                <Email sx={{ 
-                  fontSize: { xs: 35, md: 40 }, 
-                  color: 'primary.main', 
-                  mb: { xs: 1.5, md: 2 } 
-                }} />
-                <Typography 
-                  variant="h6" 
-                  gutterBottom
-                  sx={{ 
-                    fontSize: { xs: '1.1rem', md: '1.25rem' },
-                    fontWeight: 600
-                  }}
-                >
-                  Email
-                </Typography>
-                <Typography 
-                  variant="body1"
-                  sx={{ 
-                    fontSize: { xs: '0.95rem', md: '1rem' },
-                    color: 'text.secondary'
-                  }}
-                >
-                  info@mercloset.com
+                  0386866669
                 </Typography>
               </Box>
             </Grid>

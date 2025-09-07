@@ -96,27 +96,29 @@ const ProductCard = ({ product }) => {
           🖼️
         </Box>
         
-        {/* Status Badge */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 12,
-            right: 12,
-            zIndex: 1,
-          }}
-        >
-          <Chip
-            label={product.status === 'available' ? 'Có sẵn' : 'Đã thuê'}
-            color={product.status === 'available' ? 'success' : 'error'}
-            size="small"
+        {/* Status Badge (hide when available) */}
+        {product.status && product.status !== 'available' && (
+          <Box
             sx={{
-              fontWeight: 600,
-              fontSize: '0.7rem',
-              height: '24px',
-              boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              zIndex: 1,
             }}
-          />
-        </Box>
+          >
+            <Chip
+              label={'Đã thuê'}
+              color={'error'}
+              size="small"
+              sx={{
+                fontWeight: 600,
+                fontSize: '0.7rem',
+                height: '24px',
+                boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+              }}
+            />
+          </Box>
+        )}
       </Box>
 
       {/* Product Info */}

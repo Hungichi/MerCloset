@@ -323,15 +323,25 @@ const AdminPanel = () => {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-        <Typography variant="h4" component="h1">
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4, flexWrap: 'wrap', gap: 1 }}>
+        <Typography 
+          variant="h4" 
+          component="h1"
+          sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem', md: '2rem' }, fontWeight: 700 }}
+        >
           Quản lý sản phẩm
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box sx={{ display: 'flex', gap: { xs: 1, sm: 1.5, md: 2 } }}>
           <Button
             variant="contained"
             startIcon={<Add />}
             onClick={() => handleOpenDialog()}
+            size={typeof window !== 'undefined' ? undefined : undefined}
+            sx={{ 
+              px: { xs: 1.25, sm: 1.75, md: 2 },
+              py: { xs: 0.5, sm: 0.7, md: 0.9 },
+              fontSize: { xs: '0.75rem', sm: '0.8rem', md: '0.875rem' }
+            }}
           >
             Thêm sản phẩm
           </Button>
@@ -340,6 +350,11 @@ const AdminPanel = () => {
             startIcon={<Logout />}
             onClick={handleLogout}
             color="error"
+            sx={{ 
+              px: { xs: 1.25, sm: 1.75, md: 2 },
+              py: { xs: 0.5, sm: 0.7, md: 0.9 },
+              fontSize: { xs: '0.75rem', sm: '0.8rem', md: '0.875rem' }
+            }}
           >
             Đăng xuất
           </Button>
@@ -353,8 +368,8 @@ const AdminPanel = () => {
       )}
 
       {/* Products Table */}
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} sx={{ overflowX: 'auto' }}>
+        <Table sx={{ minWidth: 900 }}>
           <TableHead>
             <TableRow>
               <TableCell>Hình ảnh</TableCell>
@@ -464,8 +479,15 @@ const AdminPanel = () => {
                     size="small"
                   />
                 </TableCell>
-                <TableCell>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
+                <TableCell sx={{ minWidth: { xs: 200, sm: 240 } }}>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    gap: { xs: 0.5, md: 1 }, 
+                    flexWrap: 'nowrap', 
+                    whiteSpace: 'nowrap',
+                    overflowX: 'auto',
+                    justifyContent: { xs: 'flex-start', md: 'flex-start' }
+                  }}>
                     <Tooltip title="Xem chi tiết">
                       <IconButton size="small">
                         <Visibility />

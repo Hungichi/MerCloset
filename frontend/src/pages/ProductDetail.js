@@ -20,7 +20,7 @@ import {
   Paper,
   Divider,
 } from '@mui/material';
-import { CalendarToday, Phone, Email, CheckCircle, Cancel } from '@mui/icons-material';
+import { CalendarToday, Phone, LocationOn, CheckCircle, Cancel } from '@mui/icons-material';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import axios from 'axios';
@@ -132,7 +132,7 @@ const ProductDetail = () => {
   const getStatusText = (status) => {
     switch (status) {
       case 'available':
-        return 'Có sẵn';
+        return '';
       case 'rented':
         return 'Đã thuê';
       case 'maintenance':
@@ -284,11 +284,13 @@ const ProductDetail = () => {
               <Typography variant="h4" component="h1" gutterBottom>
                 {product.name}
               </Typography>
-              <Chip
-                label={getStatusText(product.status)}
-                color={getStatusColor(product.status)}
-                size="large"
-              />
+              {product.status !== 'available' && (
+                <Chip
+                  label={getStatusText(product.status)}
+                  color={getStatusColor(product.status)}
+                  size="large"
+                />
+              )}
             </Box>
             
             {product.brand && (
@@ -425,11 +427,11 @@ const ProductDetail = () => {
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
               <Phone sx={{ mr: 1, color: 'primary.main' }} />
-              <Typography>0123 456 789</Typography>
+              <Typography>0386866669</Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Email sx={{ mr: 1, color: 'primary.main' }} />
-              <Typography>info@mercloset.com</Typography>
+              <LocationOn sx={{ mr: 1, color: 'primary.main' }} />
+              <Typography>Phùng Hưng, Sơn Tây, HN</Typography>
             </Box>
           </Paper>
         </Grid>
