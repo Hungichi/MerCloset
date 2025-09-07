@@ -55,7 +55,7 @@ const Login = () => {
 
   return (
     <Container maxWidth="sm" sx={{ mt: 8 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
+      <Paper elevation={3} sx={{ p: 4, bgcolor: '#FDFCF8', border: '1px solid #E6D7C3' }}>
         <Box sx={{ textAlign: 'center', mb: 4 }}>
           <Lock sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
           <Typography variant="h4" component="h1" gutterBottom>

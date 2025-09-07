@@ -156,12 +156,12 @@ const ProductCard = ({ product }) => {
             <Typography 
               variant="body2" 
               sx={{ 
-                fontSize: '0.75rem', // Giảm font size
-                color: '#8B7355',
-                fontWeight: 500,
+                fontSize: '0.8rem',
+                color: '#5D4E37',
+                fontWeight: 600,
               }}
             >
-              - {product.brand}
+              Brand: {product.brand}
             </Typography>
           )}
         </Box>
@@ -181,7 +181,7 @@ const ProductCard = ({ product }) => {
               sx={{
                 fontWeight: 'bold',
                 fontSize: { xs: '0.8rem', sm: '0.85rem', md: '0.9rem' },
-                color: '#8B7355',
+                color: '#000000',
               }}
             >
               {pricePerDay.toLocaleString('vi-VN')} VNĐ/ngày

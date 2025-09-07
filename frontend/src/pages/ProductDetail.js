@@ -170,11 +170,11 @@ const ProductDetail = () => {
                 height: '500px',
                 borderRadius: '12px',
                 overflow: 'hidden',
-                backgroundColor: '#f8f9fa',
+                backgroundColor: '#F5F1EB',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                boxShadow: '0 4px 20px rgba(93,78,55,0.08)',
               }}
             >
               <img
@@ -256,9 +256,9 @@ const ProductDetail = () => {
                   flex: '0 0 auto',
                   position: 'relative',
                   cursor: 'pointer',
-                  outline: selectedImage === thumb ? '2px solid #1976d2' : '2px solid transparent',
-                  boxShadow: selectedImage === thumb ? '0 0 0 2px rgba(25,118,210,0.2)' : 'none',
-                  backgroundColor: '#f8f9fa',
+                  outline: selectedImage === thumb ? '2px solid #8B7355' : '2px solid transparent',
+                  boxShadow: selectedImage === thumb ? '0 0 0 2px rgba(139,115,85,0.2)' : 'none',
+                  backgroundColor: '#F5F1EB',
                 }}
               >
                 <img
@@ -419,7 +419,7 @@ const ProductDetail = () => {
           )}
 
           {/* Contact Info */}
-          <Paper sx={{ p: 2, bgcolor: 'grey.50' }}>
+          <Paper sx={{ p: 2, bgcolor: '#FDFCF8', border: '1px solid #E6D7C3' }}>
             <Typography variant="h6" gutterBottom>
               Liên hệ đặt hàng
             </Typography>

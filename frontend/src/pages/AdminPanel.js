@@ -378,7 +378,7 @@ const AdminPanel = () => {
                       height: '60px',
                       borderRadius: '8px',
                       overflow: 'hidden',
-                      backgroundColor: '#f8f9fa',
+                      backgroundColor: '#F5F1EB',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -406,8 +406,8 @@ const AdminPanel = () => {
                         height: '100%',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: '#f8f9fa',
-                        color: '#6c757d',
+                        backgroundColor: '#F5F1EB',
+                        color: '#5D4E37',
                         fontSize: '1.5rem',
                       }}
                     >
@@ -716,11 +716,11 @@ const AdminPanel = () => {
                         height: '120px',
                         borderRadius: '8px',
                         overflow: 'hidden',
-                        backgroundColor: '#f8f9fa',
+                        backgroundColor: '#F5F1EB',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        border: '2px solid #e9ecef',
+                        border: '2px solid #E6D7C3',
                       }}
                     >
                       <img
@@ -745,8 +745,8 @@ const AdminPanel = () => {
                           height: '100%',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          backgroundColor: '#f8f9fa',
-                          color: '#6c757d',
+                          backgroundColor: '#F5F1EB',
+                          color: '#5D4E37',
                           fontSize: '2rem',
                         }}
                       >
@@ -790,11 +790,11 @@ const AdminPanel = () => {
                             height: '100px',
                             borderRadius: '8px',
                             overflow: 'hidden',
-                            backgroundColor: '#f8f9fa',
+                            backgroundColor: '#F5F1EB',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            border: '2px solid #e9ecef',
+                            border: '2px solid #E6D7C3',
                           }}
                         >
                           <img
@@ -819,8 +819,8 @@ const AdminPanel = () => {
                               height: '100%',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              backgroundColor: '#f8f9fa',
-                              color: '#6c757d',
+                              backgroundColor: '#F5F1EB',
+                              color: '#5D4E37',
                               fontSize: '1.5rem',
                             }}
                           >
