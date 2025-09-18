@@ -1,4 +1,4 @@
-# MerCloset - Clothing Rental Platform
+# [MerCloset - Clothing Rental Platform](https://mer-closet.vercel.app/)
 
 A full-stack web application for clothing rental with public viewing and admin management capabilities.
 
