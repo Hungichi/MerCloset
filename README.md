@@ -1,4 +1,4 @@
-# [MerCloset - Clothing Rental Platform](https://mer-closet.vercel.app/)-Wait a moment for the backend to run
+# [MerCloset - Clothing Rental Platform](https://mer-closet.vercel.app/)-Wait a moment for the backend to start
 
 
 A full-stack web application for clothing rental with public viewing and admin management capabilities.
